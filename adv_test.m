@@ -1,21 +1,20 @@
-%¹ã¸æµã»÷Ô¤²âtest
-%Êı¾İ²¹È«
-%conpletion(A,k)AÎª²¹È«Êı¾İ¼¯£¬kÎª²¹È«Ä£Ê½£º1Æ½¾ùÖµ 2ÖÚÊı
-I1=completion(I1,1);
-I2=completion(I2,1);
+%å¹¿å‘Šç‚¹å‡»é¢„æµ‹test
+%æ•°æ®è¡¥å…¨
+%conpletion(A,k)Aä¸ºè¡¥å…¨æ•°æ®é›†ï¼Œkä¸ºè¡¥å…¨æ¨¡å¼ï¼š1å¹³å‡å€¼ 2ä¼—æ•°
+I1=completion(I1,2);
+I2=completion(I2,2);
 I3=completion(I3,2);
-I4=completion(I4,1);
-I5=completion(I5,1);
-I6=completion(I6,1);
-I7=completion(I7,1);
-I8=completion(I8,1);
-I9=completion(I9,1);
-I10=completion(I10,1);
-I11=completion(I11,1);
-I13=completion(I13,1);
-
-%Êı¾İÌØÕ÷´¦Àí
-I1=Feascaling(I1);%ÌØÕ÷Ëõ·Å
+I4=completion(I4,2);
+I5=completion(I5,2);
+I6=completion(I6,2);
+I7=completion(I7,2);
+I8=completion(I8,2);
+I9=completion(I9,2);
+I10=completion(I10,2);
+I11=completion(I11,2);
+I13=completion(I13,2);
+% %æ•°æ®ç‰¹å¾å¤„ç†
+I1=Feascaling(I1);%ç‰¹å¾ç¼©æ”¾
 I2=Feascaling(I2);
 I3=Feascaling(I3);
 I4=Feascaling(I4);
@@ -28,7 +27,7 @@ I10=Feascaling(I10);
 I11=Feascaling(I11);
 I13=Feascaling(I13);
 
-dim=12;%ÌØÕ÷Î¬¶È
+dim=12;%ç‰¹å¾ç»´åº¦
 
 A=[I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I13];
 [m,n]=size(A);
@@ -36,11 +35,10 @@ for i=1:m
 A(i,dim+1)=1;
 end
 X=A;
-Z=X*B;%simoid×Ô±äÁ¿ m*1
+Z=X*B;%simoidè‡ªå˜é‡ m*1
 for j=1:m
-        H(j,:)=1/(1+exp(Z(j,:)));%¼¤Àøº¯Êı
+        H(j,:)=1/(1+exp(-Z(j,:)));%æ¿€åŠ±å‡½æ•°
 end
-
 submission=[Id,H];
-csvwrite('advcsv1.csv',submission);
+csvwrite('advcsv11.csv',submission);
 
