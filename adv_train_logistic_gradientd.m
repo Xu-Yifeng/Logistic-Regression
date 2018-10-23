@@ -1,21 +1,21 @@
-%¹ã¸æµã»÷Ô¤²â Âß¼­»Ø¹é I12È±Ê§Êı¾İ¹ı¶à²»×÷ÎªÌØÕ÷
-%Êı¾İ²¹È« 
-%conpletion(A,k)AÎª²¹È«Êı¾İ¼¯£¬kÎª²¹È«Ä£Ê½£º1Æ½¾ùÖµ 2ÖÚÊı
-I1=completion(I1,1);
-I2=completion(I2,1);
+%å¹¿å‘Šç‚¹å‡»é¢„æµ‹ é€»è¾‘å›å½’ I12ç¼ºå¤±æ•°æ®è¿‡å¤šä¸ä½œä¸ºç‰¹å¾
+%æ•°æ®è¡¥å…¨ 
+%conpletion(A,k)Aä¸ºè¡¥å…¨æ•°æ®é›†ï¼Œkä¸ºè¡¥å…¨æ¨¡å¼ï¼š1å¹³å‡å€¼ 2ä¼—æ•°
+I1=completion(I1,2);
+I2=completion(I2,2);
 I3=completion(I3,2);
-I4=completion(I4,1);
-I5=completion(I5,1);
-I6=completion(I6,1);
-I7=completion(I7,1);
-I8=completion(I8,1);
-I9=completion(I9,1);
-I10=completion(I10,1);
-I11=completion(I11,1);
-I13=completion(I13,1);
+I4=completion(I4,2);
+I5=completion(I5,2);
+I6=completion(I6,2);
+I7=completion(I7,2);
+I8=completion(I8,2);
+I9=completion(I9,2);
+I10=completion(I10,2);
+I11=completion(I11,2);
+I13=completion(I13,2);
 
-%Êı¾İÌØÕ÷´¦Àí 
-%¶ÔÊı¾İÌØÕ÷½øĞĞÌØÕ÷Ëõ·Å
+%æ•°æ®ç‰¹å¾å¤„ç† 
+%å¯¹æ•°æ®ç‰¹å¾è¿›è¡Œç‰¹å¾ç¼©æ”¾
 I1=Feascaling(I1);
 I2=Feascaling(I2);
 I3=Feascaling(I3);
@@ -30,38 +30,47 @@ I11=Feascaling(I11);
 I13=Feascaling(I13);
 
 
-dim=12;%ÌØÕ÷Î¬¶È
 
 A=[I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I13];
-[m,n]=size(A);
+[m,dim]=size(A);%ç‰¹å¾ç»´åº¦
+
 for i=1:m
 A(i,dim+1)=1;
 end
 
-X=A(:,1:dim+1);%training data
-Y=Label;%training dataµÄ½á¹û
-B=ones(dim+1,1);%³õÊ¼»¯²ÎÊı¾ØÕó
-step=0;%µü´ú²½Êı
-a=0.3;%learning rate
-Z=X*B;%simoid×Ô±äÁ¿ m*1
+X=A(:,1:dim+1);%è®­ç»ƒé›†æ•°æ®
+Y=Label;%è®­ç»ƒé›†label
+B=zeros(dim+1,1);%åˆå§‹åŒ–å‚æ•°çŸ©é˜µ
+step=0;%è¿­ä»£æ­¥æ•°
+
+Z=X*B;
 for j=1:m
-        H(j,:)=1/(1+exp(Z(j,:)));%¼¤Àøº¯Êı
+        H(j,:)=1/(1+exp(-Z(j,:)));%sigmiodå‡½æ•°
 end
-lambda=0;%ÕıÔò»¯ÏµÊı 
-while   step<1000
-    Z=X*B;%simoid×Ô±äÁ¿ m*1Î¬
-    for j=1:m
-        H(j,:)=1/(1+exp(Z(j,:)));%sigmiodº¯Êı
-    end
-    E=(-1/m)*(Y'*log(H)+(1-Y')*log(1-H));%Loss Function
-    sum=0;
-    for a=1:dim-1
-        sum=sum+B(a)*B(a);
-    end
-    E=(-1/m)*(Y'*log(H)+(1-Y')*log(1-H))+lambda*sum/m;;%Loss Function +ÕıÔò»¯
-    J=-X'*(H-Y)/m;%Ìİ¶È
-    B=B-a*J-(lambda/m)*B;%Ê¹ÓÃÁËÕıÔò»¯µÄÌİ¶Èµü´ú
+
+E(1,:)=(-1/m)*(Y'*log(H)+(1-Y')*log(1-H));
+J=X'*(H-Y)/m;
+a=0.03;%learning rate
+lambda=10;%æ­£åˆ™åŒ–ç³»æ•°
+while  step<6000
+    sum=0;%æ­£åˆ™åŒ–é¡¹
+    Z=X*B;%simoidè‡ªå˜é‡ m*1ç»´
     step=step+1;
+    for j=1:m
+        H(j,:)=1/(1+exp(-Z(j,:)));%sigmiodå‡½æ•°
+    end
+    
+    for j=1:dim
+        sum=sum+B(j,:)*B(j,:);
+    end
+    EC(step,:)=lambda*sum/m;
+    E(step,:)=(-1/m)*(Y'*log(H)+(1-Y')*log(1-H))+lambda*sum/m;%Loss Function
+    J=X'*(H-Y)/m+lambda*B/m;%æ¢¯åº¦
+    B=B-a*J;%æ¢¯åº¦è¿­ä»£
 end
+figure(1);
+plot(E);%ç»˜åˆ¶lossä¸è¿­ä»£æ¬¡æ•°çš„å…³ç³»å›¾
+figure(2);
+plot(EC);%ç»˜åˆ¶æ­£åˆ™åŒ–é¡¹ä¸è¿­ä»£æ¬¡æ•°çš„å…³ç³»å›¾
 
 
